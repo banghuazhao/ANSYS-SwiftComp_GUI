@@ -1,3 +1,3 @@
-# hello-world
-This is my first try in github.
-My name is Banghua Zhao. I am a master student at Purdue University.
+# ANSYS-SwiftComp GUI 1.1
+
+The introduction and installation can be found in the user's manual in ANSYS-SwiftComp_GUI folder.
