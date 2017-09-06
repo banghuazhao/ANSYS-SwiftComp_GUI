@@ -1,0 +1,122 @@
+!******************************************************
+! This file writes execute code for Swiftcomp         *
+! Homogenization run                                  *
+!                                                     *
+! written by: Banghua Zhao                            *
+! Date: 2015                                          *
+!                                                     *
+! Modified by: Banghua Zhao                           *
+! Date: 2016                                          *
+!******************************************************
+
+
+/NOPR
+
+*if, nmate, eq, 0, then
+*MSG,ERROR
+No material properties found.%/&
+Please add material properties!
+/EOF
+*endif
+
+
+*IF, nSG, NE, 1, THEN
+*IF, nelem6, EQ, 0, THEN
+*IF, nelem7, EQ, 0, THEN
+*IF, nelem8, EQ, 0, THEN
+*IF, nelem9, EQ, 0, THEN
+*IF, nelem10, EQ, 0, THEN
+*IF, nelem11, EQ, 0, THEN
+*IF, nelem12, EQ, 0, THEN
+*MSG,ERROR
+Wrong Element Type!%/&
+6-noded triangular elements: PLANE2 %/&
+4-noded quadrilateral elements: PLANE182 or PLANE42 %/&
+8-noded quadrilateral elements: PLANE183 or PLANE82 %/&
+4-noded tetrahedral elements: SOLID285%/&
+10-noded tetrahedral elements: SOLID187 or SOLID92 %/&
+8-noded brick elements: SOLID185 or SOLID45 %/&
+20-noded brick elements: SOLID186 or SOLID95 
+/EOF
+*endif
+*endif
+*endif
+*endif
+*endif
+*endif
+*endif
+*endif
+
+Homogenization_flag=1
+
+*DEL, filename_sc
+*DEL, filename_sc_k
+*DEL, Hcommand
+
+*DIM, filename_sc, String, 200
+*DIM, filename_sc_k, String, 200
+*DIM, Hcommand, String, 200
+
+filename_sc(1)= filename(1)
+filename_sc(Strleng(filename_sc(1))+1)= '.sc'
+filename_sc_k(1)= filename_sc(1)
+filename_sc_k(Strleng(filename_sc(1))+1)= '.k'
+Hcommand(1)= 'SwiftComp'
+Hcommand(11)= filename_sc(1)
+
+*MSG,UI
+Performing homogenization run! It may take a moment! %/&
+
+
+*IF, HD, EQ, 1, THEN
+Hcommand(Strleng(Hcommand(1))+2)= '1D H'
+*CFOPEN, SwiftCompCommand, txt
+*vwrite, Hcommand(1), Hcommand(9), Hcommand(17), Hcommand(25), Hcommand(33), Hcommand(41), Hcommand(49), Hcommand(57), Hcommand(65)
+('/SYS, ',9A)
+*CFCLOS
+/input, SwiftCompCommand, txt
+*ENDIF
+
+*IF, HD, EQ, 2, THEN
+Hcommand(Strleng(Hcommand(1))+2)= '2D H'
+*CFOPEN, SwiftCompCommand, txt
+*vwrite, Hcommand(1), Hcommand(9), Hcommand(17), Hcommand(25), Hcommand(33), Hcommand(41), Hcommand(49), Hcommand(57), Hcommand(65)
+('/SYS, ',9A)
+*CFCLOS
+/input, SwiftCompCommand, txt
+*ENDIF
+
+*IF, HD, EQ, 3, THEN
+Hcommand(Strleng(Hcommand(1))+2)= '3D H'
+*CFOPEN, SwiftCompCommand, txt
+*vwrite, Hcommand(1), Hcommand(9), Hcommand(17), Hcommand(25), Hcommand(33), Hcommand(41), Hcommand(49), Hcommand(57), Hcommand(65)
+('/SYS, ',9A)
+*CFCLOS
+/input, SwiftCompCommand, txt
+*ENDIF
+
+! Test whether the homogenization is successful or not
+*DEL, htest, String, 200
+*DIM, htest, String, 200
+*SREAD, htest(1), filename_sc(1), k, , 12, 2, 1
+hestn= Valchr(htest(1))
+*if, hestn, eq, 0, then
+*MSG,ERROR
+Something is wrong!  %/&
+Please refer to Output Window!
+/EOF
+*endif
+
+
+! Homogenization is successful.
+*MSG,UI, filename_sc_k(1)
+Homogenization is finished successfully! %/&
+Please close %C file for other operation.
+*CFOPEN, SwiftCompCommand, txt
+*vwrite, filename_sc_k(1), filename_sc_k(9), filename_sc_k(17), filename_sc_k(25), filename_sc_k(33), filename_sc_k(41), filename_sc_k(49), filename_sc_k(57), filename_sc_k(65)
+('/SYS, ',9A)
+*CFCLOS
+/input, SwiftCompCommand, txt
+
+
+/GOPR

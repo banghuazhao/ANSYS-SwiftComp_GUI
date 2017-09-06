@@ -1,0 +1,272 @@
+!*******************************************************
+! Input Homogenization Information 1D Structure Genome *
+!                                                      *
+! written by: Banghua Zhao                             *
+! Date: 2015                                           *
+!                                                      *
+! Modified by: Banghua Zhao                            *
+! Date: 2016                                           *
+!*******************************************************
+
+
+/prep7  
+/NOPR
+
+ALLSEL,ALL  
+
+SHPP,OFF,ASPECT 
+	
+*Get, nmate, MAT, 0, COUNT
+ 
+*DO, I, 1, nmate
+	*get,  E1,   EX, I
+	*get, v12, PRXY, I
+	*get, rho, DENS, I
+	
+	*IF, E1, NE, 7.888609052E-31, THEN   ! not anisotropic material 
+		*get, E2, EY, I
+		*get, E3, EZ, I
+ 	
+	 	*IF, E2, EQ, 7.888609052E-31, AND, E3, EQ, 7.888609052E-31, THEN   ! isotropic material 
+			isotropy_%I% = 0
+			E1_%I% = E1
+			v12_%I% = v12
+			rho_%I%  = rho
+			
+			*ELSEIF, E2, NE, 7.888609052E-31, AND, E3, NE, 7.888609052E-31,  ! orthotropic material 	
+				*get, G13,  GXZ, I
+				*get, G12,  GXY, I
+				*get, G23,  GYZ, I
+				*get, v13, PRXZ, I
+				*get, v23, PRYZ, I
+						
+				isotropy_%I% = 1
+				E1_%I% = E1
+				E2_%I% = E2
+				E3_%I% = E3
+				G12_%I% = G12
+				G13_%I% = G13
+				G23_%I% = G23
+				v12_%I% = v12
+				v13_%I% = v13
+				v23_%I% = v23
+				rho_%I% = rho
+			
+		*ENDIF
+		
+		*ELSEIF, E1, EQ, 7.888609052E-31            ! anisotropic material 
+				isotropy_%I% = 2
+				*GET, C11_%I%, ANEL, I, , , CONST, 1
+				*GET, C12_%I%, ANEL, I, , , CONST, 2
+				*GET, C13_%I%, ANEL, I, , , CONST, 3
+				*GET, C14_%I%, ANEL, I, , , CONST, 4
+				*GET, C15_%I%, ANEL, I, , , CONST, 5
+				*GET, C16_%I%, ANEL, I, , , CONST, 6
+				*GET, C22_%I%, ANEL, I, , , CONST, 7
+				*GET, C23_%I%, ANEL, I, , , CONST, 8
+				*GET, C24_%I%, ANEL, I, , , CONST, 9
+				*GET, C25_%I%, ANEL, I, , , CONST, 10
+				*GET, C26_%I%, ANEL, I, , , CONST, 11
+				*GET, C33_%I%, ANEL, I, , , CONST, 12
+				*GET, C34_%I%, ANEL, I, , , CONST, 13
+				*GET, C35_%I%, ANEL, I, , , CONST, 14
+				*GET, C36_%I%, ANEL, I, , , CONST, 15
+				*GET, C44_%I%, ANEL, I, , , CONST, 16
+				*GET, C45_%I%, ANEL, I, , , CONST, 17
+				*GET, C46_%I%, ANEL, I, , , CONST, 18
+				*GET, C55_%I%, ANEL, I, , , CONST, 19
+				*GET, C56_%I%, ANEL, I, , , CONST, 20
+				*GET, C66_%I%, ANEL, I, , , CONST, 21
+
+				rho_%I% = rho
+		
+	*ENDIF
+		
+*ENDDO
+
+! elementtype=5
+*if, elementtype, eq, 5, then
+*DEL, e4_LST
+*DEL, e4_NODE_1
+*DEL, e4_NODE_2
+*DEL, e4_NODE_3
+*DEL, e4_NODE_4
+*DEL, e4_NODE_5
+*DIM, e4_LST,    ARRAY, layupn, 1, 1
+*DIM, e4_NODE_1, ARRAY, layupn, 1, 1
+*DIM, e4_NODE_2, ARRAY, layupn, 1, 1
+*DIM, e4_NODE_3, ARRAY, layupn, 1, 1
+*DIM, e4_NODE_4, ARRAY, layupn, 1, 1
+*DIM, e4_NODE_5, ARRAY, layupn, 1, 1
+*DO, i, 1, layupn
+	e4_LST(i)= i
+	e4_NODE_1(i)= 1+4*(i-1)
+	e4_NODE_2(i)= 5+4*(i-1)
+	e4_NODE_3(i)= 2+4*(i-1)
+	e4_NODE_4(i)= 4+4*(i-1)
+	e4_NODE_5(i)= 3+4*(i-1)
+*ENDDO	
+nnode= 4*layupn+1
+nelem= layupn
+*endif
+
+! elementtype=2
+*if, elementtype, eq, 2, then
+*DEL, e1_LST
+*DEL, e1_NODE_1
+*DEL, e1_NODE_2
+*DEL, e1_NODE_3
+*DEL, e1_NODE_4
+*DEL, e1_NODE_5
+*DIM, e1_LST,    ARRAY, layupn, 1, 1
+*DIM, e1_NODE_1, ARRAY, layupn, 1, 1
+*DIM, e1_NODE_2, ARRAY, layupn, 1, 1
+*DIM, e1_NODE_3, ARRAY, layupn, 1, 1
+*DIM, e1_NODE_4, ARRAY, layupn, 1, 1
+*DIM, e1_NODE_5, ARRAY, layupn, 1, 1
+*do, i, 1, layupn
+	e1_LST(i)= i
+	e1_NODE_1(i)= i
+	e1_NODE_2(i)= i+1
+	e1_NODE_3(i)= 0
+	e1_NODE_4(i)= 0
+	e1_NODE_5(i)= 0
+*enddo
+nnode= layupn+1
+nelem= layupn
+*endif	
+
+! find w
+! Plate/Shell Model
+*if, Plate_flag, eq, 1, then
+	w=1
+*endif
+
+! Solid Model
+*if, Solid_flag, eq, 1, then
+	w= C1DSG_thickness
+*endif
+
+*del, filename
+*DIM, filename, string, 200
+/inquire, filename(1), jobname
+
+*CFOPEN, filename(1), sc
+
+*VWRITE,TypeFlag
+(F9.0,TL1,' ')
+*VWRITE,k12,k21
+(F9.0,TL1,' ',F9.0,TL1,' ')
+*VWRITE
+(' ')
+
+*VWRITE, analysis,  ele_flag,  trans_flag,  temp_flag
+(F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ')
+*VWRITE
+(' ')
+
+*VWRITE, nSG, nnode, nelem, nmate, nslave, nlayer
+(F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ')
+*VWRITE
+(' ')
+
+*VWRITE, NODE_LST(1), NODE_X3(1)
+(F9.0,TL1,' ', 3X, E20.13)
+*VWRITE
+(' ')
+
+! elementtype=5
+*if, elementtype, eq, 5, then
+*VWRITE, e4_LST(1), e_layer_id(1), e4_NODE_1(1), e4_NODE_2(1), e4_NODE_3(1), e4_NODE_4(1), e4_NODE_5(1)
+(F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ')
+*VWRITE
+(' ')
+*endif
+
+! elementtype=2
+*if, elementtype, eq, 2, then
+*VWRITE, e1_LST(1), e_layer_id(1), e1_NODE_1(1), e1_NODE_2(1), e1_NODE_3(1), e1_NODE_4(1), e1_NODE_5(1)
+(F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ')
+*VWRITE
+(' ')
+*endif
+
+*VWRITE, layer_id(1), layermate_id(1), angle(1)
+(F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F16.5,' ')
+*VWRITE
+(' ')
+
+*DO, I, 1, nmate
+
+*VWRITE, I, isotropy_%I%, 1
+(F9.0,TL1,' ',F9.0,TL1,' ',F9.0,TL1,' ')
+
+*IF, isotropy_%I%, EQ, 0, THEN
+*VWRITE, TEMP_%I%, rho_%I%
+(E16.11, X, E16.11)
+*VWRITE, E1_%I%, v12_%I%
+(E16.11, X, E16.11)
+*VWRITE
+(' ')
+
+*ELSEIF, isotropy_%I%, EQ, 1,
+*VWRITE, TEMP_%I%, rho_%I%
+(E16.11, X, E16.11)
+*VWRITE, E1_%I%, E2_%I%, E3_%I%
+(E16.11, X, E16.11, X, E16.11)
+*VWRITE, G12_%I%, G13_%I%, G23_%I%
+(E16.11, X, E16.11, X, E16.11)
+*VWRITE, v12_%I%, v13_%I%, v23_%I%
+(E16.11, X, E16.11, X, E16.11)
+*VWRITE
+(' ')
+
+*ELSEIF, isotropy_%I%, EQ, 2, 
+*VWRITE, TEMP_%I%, rho_%I%
+(E16.11, X, E16.11)
+*VWRITE, C11_%I%, C12_%I%, C13_%I%, C14_%I%, C15_%I%, C16_%I%
+(E16.11, X, E16.11, X, E16.11, X, E16.11, X, E16.11, X, E16.11)
+*VWRITE, C22_%I%, C23_%I%, C24_%I%, C25_%I%, C26_%I%
+(16X, X, E16.11, X, E16.11, X, E16.11, X, E16.11, X, E16.11)
+*VWRITE, C33_%I%, C34_%I%, C35_%I%, C36_%I%
+(16X, X , 16X, X, E16.11, X, E16.11, X, E16.11, X, E16.11)
+*VWRITE, C44_%I%, C45_%I%, C46_%I%
+(16X, X , 16X, X, 16X, X, E16.11, X, E16.11, X, E16.11)
+*VWRITE, C55_%I%, C56_%I%
+(16X, X , 16X, X, 16X, X, 16X, X, E16.11, X, E16.11)
+*VWRITE, C66_%I%,
+(16X, X , 16X, X, 16X, X, 16X, X, 16X, X, E16.11)
+*VWRITE
+(' ')
+*ENDIF
+*ENDDO
+
+*VWRITE,w
+(E16.11)
+
+*CFCLOS
+
+! elementtype=5
+*if, elementtype, eq, 5, then
+*CFOPEN, elementfile, txt
+*VWRITE, e4_LST(1), e_layer_id(1), e4_NODE_1(1), e4_NODE_2(1), e4_NODE_3(1), e4_NODE_4(1), e4_NODE_5(1)
+(F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ')
+*VWRITE
+(' ')
+*endif
+
+! elementtype=2
+*if, elementtype, eq, 2, then
+*CFOPEN, elementfile, txt
+*VWRITE, e1_LST(1), e_layer_id(1), e1_NODE_1(1), e1_NODE_2(1), e1_NODE_3(1), e1_NODE_4(1), e1_NODE_5(1)
+(F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ', 2X, F9.0,TL1,' ')
+*VWRITE
+(' ')
+*endif
+
+*CFCLOS
+
+H_Run,mac
+
+
+/GOPR

@@ -1,0 +1,52 @@
+!*************************************************************
+! Input Homogenization Information for Plate & Shell Model   *
+!                                                            *
+! written by: Banghua Zhao                                   *
+! Date: 2015                                                 *
+!                                                            *
+! Modified by: Banghua Zhao                                  *
+! Date: 2016                                                 *
+!*************************************************************
+
+
+/prep7
+/NOPR
+
+*abset, 'Plate/Shell Model Data processing', BAR
+
+HD=2   !Homogenization Dimension
+
+TypeFlag=ARG1
+k12=ARG2
+k21=ARG3
+analysis=ARG4
+ele_flag=ARG5
+trans_flag=ARG6
+temp_flag=ARG7
+nslave=0
+Plate_flag=1
+
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!C1DSG_flag not equal 1
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*IF, C1DSG_flag, NE, 1, THEN
+
+H_node-no_y1_y2_y3,mac
+
+*ENDIF
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!C1DSG_flag equal 1
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*IF, C1DSG_flag, EQ, 1, THEN
+
+H_C1D,mac
+
+*ENDIF
+
+/GOPR

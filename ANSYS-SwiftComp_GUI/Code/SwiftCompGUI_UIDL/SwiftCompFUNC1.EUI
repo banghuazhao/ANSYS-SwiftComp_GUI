@@ -1,0 +1,175 @@
+namespace eval ::euidl::uidlmenu::uidlmenuItems {
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_C_1D_Fast) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Fast Generate"]
+   lappend tags leaf
+   lappend tags leaflevel__$level
+   set icon dlgicon
+   set branchName [list Fnc_C_1D_Fast__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_C_1D_Adv) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Advanced Generate"]
+   lappend tags leaf
+   lappend tags leaflevel__$level
+   set icon dlgicon
+   set branchName [list Fnc_C_1D_Adv__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_C_1D_Inp) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Input File"]
+   lappend tags leaf
+   lappend tags leaflevel__$level
+   set icon dlgicon
+   set branchName [list Fnc_C_1D_Inp__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_C_2D_B_Com) { top {key 0} {level 0} } {
+   global env
+   incr level
+   if {![ans_getfilter 0 [list (PR_STRUC*pr_set)]]} {
+      return -code error
+   }
+   set branchLeafs [list]
+   set str [::msgcat::mc "Common Section"]
+   lappend tags leaf
+   lappend tags leaflevel__$level
+   set icon dlgicon
+   set branchName [list Fnc_C_2D_B_Com__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_C_2D_B_Plot) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Plot Section"]
+   lappend tags leaf
+   lappend tags leaflevel__$level
+   set icon dlgicon
+   set branchName [list Fnc_C_2D_B_Plot__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_C_2D_Square) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Square Pack"]
+   lappend tags leaf
+   lappend tags leaflevel__$level
+   set icon dlgicon
+   set branchName [list Fnc_C_2D_Square__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_C_2D_Hexag) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Hexagonal Pack"]
+   lappend tags leaf
+   lappend tags leaflevel__$level
+   set icon dlgicon
+   set branchName [list Fnc_C_2D_Hexag__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_C_3D_Square) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Square Pack"]
+   lappend tags leaf
+   lappend tags leaflevel__$level
+   set icon dlgicon
+   set branchName [list Fnc_C_3D_Square__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_C_3D_Sphere) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Spherical Inclusion"]
+   lappend tags leaf
+   lappend tags leaflevel__$level
+   set icon dlgicon
+   set branchName [list Fnc_C_3D_Sphere__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_C_3D_Honeyc) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Honeycomb"]
+   lappend tags leaf
+   lappend tags leaflevel__$level
+   set icon dlgicon
+   set branchName [list Fnc_C_3D_Honeyc__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}

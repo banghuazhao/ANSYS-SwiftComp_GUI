@@ -1,0 +1,355 @@
+!******************************************************
+! Advanced Laminate Generate                          *
+!                                                     *
+! written by: Banghua Zhao                            *
+! Date: 2015                                          *
+!                                                     *
+! Modified by: Banghua Zhao                           *
+! Date: 2016                                          *
+!******************************************************
+
+
+/prep7 
+/NOPR 
+
+! Check Material Model
+*Get, test, MAT, 0, COUNT
+*IF, test, eq, 0, THEN
+*MSG, ERROR
+No Material Model found. %/&
+Please create Material Model!
+/EOF
+*ENDIF
+
+! Check keypoints
+*GET, test, kp, 0, COUNT
+*IF, test, ne, 0, THEN
+*MSG, ERROR
+Please creat a new file to carry on analysis!
+/EOF
+*ENDIF
+
+! Check lines
+*GET, test, line, 0, COUNT
+*IF, test, ne, 0, THEN
+*MSG, ERROR
+Please creat a new file to carry on analysis!
+/EOF
+*ENDIF
+
+! Check areas
+*GET, test, area, 0, COUNT
+*IF, test, ne, 0, THEN
+*MSG, ERROR
+Please creat a new file to carry on analysis!
+/EOF
+*ENDIF
+
+! Check volumes
+*GET, test, volu, 0, COUNT
+*IF, test, ne, 0, THEN
+*MSG, ERROR
+Please creat a new file to carry on analysis!
+/EOF
+*ENDIF
+
+! Check nodes
+*GET, test, NODE, 0, COUNT
+*IF, test, ne, 0, THEN
+*MSG, ERROR
+Please creat a new file to carry on analysis!
+/EOF
+*ENDIF
+
+! Check elements
+*GET, test, ELEM, 0, COUNT
+*IF, test, ne, 0, THEN
+*MSG, ERROR
+Please creat a new file to carry on analysis!
+/EOF
+*ENDIF
+
+nSG=1
+C1DSG_flag= 1
+Layupn= 4
+	
+*Get, nmate, MAT, 0, COUNT
+
+*DEL, layupm
+*DEL, layupa
+*DEL, layupt           
+*DEL, layermate_id
+*DEL, angle
+*DEL, e_layer_id
+
+*DIM, layupt, ARRAY, 10000     ! Store layup thickness
+*DIM, layupa, ARRAY, 10000     ! Store layup angle
+*DIM, layupm, ARRAY, 10000     ! Store layup material
+*DIM, layermate_id, ARRAY, 200, 1, 1
+*DIM, angle,        ARRAY, 200, 1, 1
+*DIM, e_layer_id, ARRAY, 10000, 1, 1
+
+layupt(1)= ARG1
+layupa(1)= ARG2
+layupm(1)= ARG3
+ 
+layupt(2)= ARG4
+layupa(2)= ARG5
+layupm(2)= ARG6
+
+layupt(3)= ARG7
+layupa(3)= ARG8
+layupm(3)= ARG9
+
+layupt(4)= AR10
+layupa(4)= AR11
+layupm(4)= AR12
+
+m= AR13
+s= AR14
+n= AR15
+elementtype= AR16
+
+! Check Material #
+*if, arg3, le, 0, or, arg6, le, 0,then
+*MSG,ERROR
+Material # is wrong,%/&
+Please recheck and carry on analysis!
+/EOF
+*ENDIF
+
+*if, arg9, le, 0, or, ar12, le, 0,then
+*MSG,ERROR
+Material # is wrong,%/&
+Please recheck and carry on analysis!
+/EOF
+*ENDIF
+
+*if, arg3, gt, nmate, or, arg6, gt, nmate, then
+*MSG,ERROR
+Material # is greater than the # of Material Models,%/&
+Please recheck and carry on analysis!
+/EOF
+*ENDIF
+
+*if, arg9, gt, nmate, or, ar12, gt, nmate, then
+*MSG,ERROR
+Material # is greater than the # of Material Models,%/&
+Please recheck and carry on analysis!
+/EOF
+*ENDIF
+
+*IF, m, EQ, 0, THEN
+	m=1
+*ENDIF
+*IF, n, EQ, 0, THEN
+	n=1
+*ENDIF
+
+! Repetition before symmetry
+*IF, m, GT, 1, THEN
+	*DO, i, 1, m-1
+		*DO, j, 1, layupn
+			layupt(j+i*layupn)= layupt(j)
+			layupa(j+i*layupn)= layupa(j)  	
+			layupm(j+i*layupn)= layupm(j)
+		*ENDDO
+	*ENDDO
+	layupn= layupn*m
+*ENDIF
+
+! Symmetry
+*IF, s, NE, 0, THEN
+	*DO, i, 1, layupn  
+		layupt(i+layupn)= layupt(layupn-(i-1))
+		layupa(i+layupn)= layupa(layupn-(i-1))		
+		layupm(i+layupn)= layupm(layupn-(i-1))
+	*ENDDO
+	layupn= layupn*2
+*ENDIF
+
+! Repetition after symmetry
+*IF, n, GT, 1, THEN
+	*DO, i, 1, n-1
+		*DO, j, 1, layupn 
+			layupt(j+i*layupn)= layupt(j)
+			layupa(j+i*layupn)= layupa(j) 			
+			layupm(j+i*layupn)= layupm(j)
+		*ENDDO
+	*ENDDO
+	layupn= layupn*n
+*ENDIF
+
+sum=1
+angle(1)= layupa(1)    
+layermate_id(1)= layupm(1)
+e_layer_id(1)= 1
+*DO, i , 2, layupn
+	k1= layupa(i)
+	k2= layupm(i)
+	p= 0
+	*DO, j, 1, i-1
+		*IF, k1, EQ, layupa(j), AND, k2, EQ, layupm(j), THEN
+			p= j
+			*EXIT
+		*ENDIF
+	*ENDDO
+	*IF, p, EQ, 0, THEN
+		sum=sum+1
+		angle(sum)= k1
+		layermate_id(sum)= k2
+	*ENDIF
+	*DO, j, 1, sum
+		*IF, k1, EQ, angle(j), AND, k2, EQ, layermate_id(j), THEN
+			e_layer_id(i)= j
+			*EXIT
+		*ENDIF
+	*ENDDO
+*ENDDO
+
+nlayer= sum        ! Total # of layup type (total # of lamina type)
+
+*DEL, layer_id
+*DIM, layer_id, ARRAY, nlayer, 1, 1 
+*DO, i , 1, nlayer
+	layer_id(i)= i
+*ENDDO
+
+! elementtype=5
+*if,elementtype, eq, 5, then
+! Get node_x3 coordinate and plot the SG
+*DEL, NODE_LST, ARRAY, 4*layupn+1
+*DEL, NODE_X3, ARRAY, 4*layupn+1
+
+*DIM, NODE_LST, ARRAY, 4*layupn+1
+*DIM, NODE_X3, ARRAY, 4*layupn+1
+
+*DO, i, 1, 4*layupn+1
+	NODE_LST(i)= i
+*ENDDO
+
+NODE_X3(2*layupn+1)=0
+*IF, mod(layupn,2), EQ, 0, Then
+	t1=0
+	t2=0
+	*DO, i, 1, layupn/2
+		t1= t1+ layupt(i)
+		t2= t2+ layupt(i+layupn/2)
+	*ENDDO
+	NODE_X3(4*layupn+1)= t2
+	sum=0
+	*DO, i, 1, layupn/2
+		*DO, j, 1, 4
+			NODE_X3((i-1)*4+j)= sum+(j-1)*layupt(i)/4-t1
+		*ENDDO
+		sum= sum+ layupt(i)
+	*ENDDO
+	sum=0
+	*DO, i, layupn/2+1, layupn
+		*DO, j, 1, 4
+			NODE_X3((i-1)*4+j)= sum+(j-1)*layupt(i)/4
+		*ENDDO
+		sum= sum+ layupt(i)
+	*ENDDO
+*ENDIF
+
+*IF, mod(layupn,2), NE, 0, Then
+	t1=0
+	t2=0
+	*DO, i, 1, (layupn+1)/2-1
+		t1= t1+ layupt(i)
+		t2= t2+ layupt(i+(layupn+1)/2)
+	*ENDDO
+	t1= t1+layupt((layupn+1)/2)/2
+	t2= t2+layupt((layupn+1)/2)/2	
+	NODE_X3(2*layupn+2)=layupt((layupn+1)/2)/4
+	NODE_X3(2*layupn+1)=0
+	NODE_X3(2*layupn)=-layupt((layupn+1)/2)/4
+	NODE_X3(2*layupn-1)=-2*layupt((layupn+1)/2)/4
+	sum=0
+	*DO, i, 1, (layupn+1)/2-1
+		*DO, j, 1, 4
+			NODE_X3((i-1)*4+j)= sum+(j-1)*layupt(i)/4-t1
+		*ENDDO
+		sum= sum+ layupt(i)
+	*ENDDO
+	sum=layupt((layupn+1)/2)/2	
+	*DO, i, (layupn+1)/2+1, layupn
+		*DO, j, 1, 4
+			NODE_X3((i-1)*4+j)= sum+(j-1)*layupt(i)/4
+		*ENDDO
+		sum= sum+ layupt(i)
+	*ENDDO
+	NODE_X3(4*layupn+1)= t2
+*ENDIF
+
+*DO, i, 1, 4*layupn+1
+	k, i, 0, NODE_X3(i), 0
+*ENDDO
+
+*DO, i, 1, 4*layupn
+	L, i, i+1
+*ENDDO
+
+*endif
+
+
+! elementtype=2
+*IF, mod(layupn,2), ne, 0, THEN
+*MSG,ERROR
+The number of layers is not even,%/&
+Please input even number of layers for 2 node element!
+/EOF
+*ENDIF
+
+*if, elementtype, eq, 2, then
+! Get node_x3 coordinate and plot the SG
+*DEL, NODE_LST, ARRAY, layupn+1
+*DEL, NODE_X3, ARRAY, layupn+1
+
+*DIM, NODE_LST, ARRAY, layupn+1
+*DIM, NODE_X3, ARRAY, layupn+1
+
+*DO, i, 1, layupn+1
+	NODE_LST(i)= i
+*ENDDO
+
+NODE_X3(layupn/2+1)=0
+t1=0
+t2=0
+*DO, i, 1, layupn/2
+	t1= t1+ layupt(i)
+	t2= t2+ layupt(i+layupn/2)
+*ENDDO
+NODE_X3(layupn+1)= t2
+sum=0
+*DO, i, 1, layupn
+	NODE_X3(i)= -t1+sum
+	sum= sum+ layupt(i)
+*ENDDO
+
+*DO, i, 1, layupn+1
+	k, i, 0, NODE_X3(i), 0
+*ENDDO
+
+*DO, i, 1, layupn
+	L, i, i+1
+*ENDDO
+
+*endif
+
+C1DSG_thickness=0
+*do, i, 1, layupn
+	C1DSG_thickness= C1DSG_thickness+ layupt(i)
+*enddo
+
+/Title, 1D SG, Number of layers=%layupn%
+
+local, 100, 0, 0, 0, 0, -90, 0, -90
+DSYS,100, 
+/VIEW,1,1,0,0   
+/VUP,1,Z
+
+GPLOT 
+
+/GOPR

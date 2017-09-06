@@ -1,0 +1,113 @@
+:F SwiftCompFUNC3.GRN
+:D User Defined Function
+:I      3,    1604,    1704
+:!
+:N Fnc_D_Beam
+:S    484,    82,   394
+:T Command
+:A Beam Model
+:D Beam Model
+Inp_NoApply
+Cmd_D_Beam
+ Fld_0
+  Typ_Lab 
+  Prm_Input global behavior for Dehomogenization
+ Fld_0
+  Typ_Sep
+ Fld_2
+  Prm_v1, v2, v3
+  Typ_Real3
+ Fld_5
+  Prm_C11, C12, C13
+  Typ_Real3
+  Def_1,0,0
+ Fld_8
+  Prm_C21, C22, C23
+  Typ_Real3
+  Def_0,1,0
+ Fld_11
+  Prm_C31, C32, C33
+  Typ_Real3
+  Def_0,0,1
+ Fld_14
+  Prm_e11
+  Typ_Real
+ Fld_15
+  Prm_k11, k12, k13
+  Typ_Real3
+:E END
+:!
+:N Fnc_D_PlateShell
+:S    526,   102,   416
+:T Command
+:A Plate/Shell Model
+:D Plate/Shell Model
+Inp_NoApply
+Cmd_D_PlateShell
+ Fld_0
+  Typ_Lab 
+  Prm_Input global behavior for Dehomogenization
+ Fld_0
+  Typ_Sep
+ Fld_2
+  Prm_v1, v2, v3
+  Typ_Real3
+ Fld_5
+  Prm_C11, C12, C13
+  Typ_Real3
+  Def_1,0,0
+ Fld_8
+  Prm_C21, C22, C23
+  Typ_Real3
+  Def_0,1,0
+ Fld_11
+  Prm_C31, C32, C33
+  Typ_Real3
+  Def_0,0,1
+ Fld_14
+  Prm_e11, e22, 2e12
+  Typ_Real3
+ Fld_17
+  Prm_k11, k22, k12+k21
+  Typ_Real3
+:E END
+:!
+:N Fnc_D_Solid
+:S    500,    85,   407
+:T Command
+:A Solid Model
+:D Solid Model
+Inp_NoApply
+Cmd_D_Solid
+ Fld_0
+  Typ_Lab 
+  Prm_Input global behavior for Dehomogenization
+ Fld_0
+  Typ_Sep
+ Fld_2
+  Prm_v1, v2, v3
+  Typ_Real3
+ Fld_5
+  Prm_C11, C12, C13
+  Typ_Real3
+  Def_1,0,0
+ Fld_8
+  Prm_C21, C22, C23
+  Typ_Real3
+  Def_0,1,0
+ Fld_11
+  Prm_C31, C32, C33
+  Typ_Real3
+  Def_0,0,1
+ Fld_14
+  Prm_e11, e22, e33
+  Typ_Real3
+ Fld_17
+  Prm_2e23,2e13,2e12
+  Typ_Real3
+:E END
+:!
+:X INDEX ADDED BY ANSYS 
+Fnc_D_Beam            82
+Fnc_D_PlateShell     570
+Fnc_D_Solid         1100
