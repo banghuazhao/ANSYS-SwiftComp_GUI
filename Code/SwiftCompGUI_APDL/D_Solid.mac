@@ -1,0 +1,43 @@
+!******************************************************
+! Input Dehomogenization Information for Solid Model  *
+!                                                     *
+! written by: Banghua Zhao                            *
+! Date: 2015                                          *
+!                                                     *
+! Modified by: Banghua Zhao                           *
+! Date: 2016                                          *
+!******************************************************
+
+
+/prep7
+/NOPR
+
+! Check homogenization type
+*if, Beam_flag, eq, 1, or, Plate_flag, eq, 1, then
+*MSG,ERROR
+Dehomogenization type is wrong,%/&
+Please choose Dehomogenization type in corresponding to Homogenization!
+/EOF
+*ENDIF
+
+D_v1=ARG1
+D_v2=ARG2
+D_v3=ARG3
+D_C11=ARG4
+D_C12=ARG5
+D_C13=ARG6
+D_C21=ARG7
+D_C22=ARG8
+D_C23=ARG9
+D_C31=AR10
+D_C32=AR11
+D_C33=AR12
+D_e11=AR13
+D_e22=AR14
+D_e33=AR15
+D_2e23=AR16
+D_2e13=AR17
+D_2e12=AR18
+
+D_SCInput, mac
+/GOPR

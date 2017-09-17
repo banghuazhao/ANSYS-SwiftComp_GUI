@@ -1,0 +1,78 @@
+namespace eval ::euidl::uidlmenu::uidlmenuItems {
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_H_Beam) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Beam Model"]
+   lappend tags leaf
+   lappend tags leaflevel__$level
+   set icon dlgicon
+   set branchName [list Fnc_H_Beam__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   set nodes "cmd_H_Beam"
+   foreach node $nodes {
+      set ignore 0
+      if { [llength $node] > 1 } {
+         foreach filterdata [lrange $node 1 end] {
+            set type [lindex $filterdata 0]
+            set filters [lindex $filterdata 1]
+            foreach filt $filters {
+               if { ![ans_getfilter $type [list $filt]] } {
+                  set ignore 1
+                  continue
+               }
+            }
+         }
+      }
+      if {$ignore} { continue }
+      if { ![catch {::euidl::uidlmenu::uidlmenuItems::uidlmenu([lindex $node 0]) Fnc_H_Beam [expr $key+1] $level} branch] && [llength $branch]} {
+         if { [string match {} $branch] } {
+            continue
+         }
+         lappend branchLeafs $branch
+      } else {
+         #puts "[info script] error $node = $branch"
+      }
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_H_PlateShell) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Plate/Shell Model"]
+   lappend tags leaf
+   lappend tags leaflevel__$level
+   set icon dlgicon
+   set branchName [list Fnc_H_PlateShell__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_H_Solid) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Solid Model"]
+   lappend tags leaf
+   lappend tags leaflevel__$level
+   set icon dlgicon
+   set branchName [list Fnc_H_Solid__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}

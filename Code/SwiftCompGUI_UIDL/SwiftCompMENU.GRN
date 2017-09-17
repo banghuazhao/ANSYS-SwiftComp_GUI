@@ -1,0 +1,319 @@
+:F SwiftCompMENU.GRN
+:D User Defined Menu
+:I     10,    5319,    5594
+:! 
+:N MenuRoot
+:S    433,    81,   344
+:T Menu
+:A Main Menu
+:D ANSYS ROOT MENU
+Men_UVBA_Main_T1
+Men_UVBA_Main_T2
+Men_UVBA_Main_T3
+Fnc_Preferences
+Sep_
+Men_Preproc
+Men_Solution
+Men_GenlPost
+Men_TimePost
+K_LN(DROPTEST)
+Sep_
+K_LN(DROPTEST)
+Men_DropTest
+Sep_
+Men_ROM
+Men_ProbDesign
+Men_Aux12
+Sep_
+Fnc_UNDO
+Sep_
+Fnc_FINISH
+K_LN(UTILMENU)
+Men_UtilMenu
+Men_UVBA_Main_B1
+Men_UVBA_Main_B2
+Men_UVBA_Main_B3
+:E END
+:! 
+:N Men_Preproc
+:S    782,   191,   583
+:T Menu
+:A Preprocessor
+:C )/nopr
+:C )!*get,_z1,active,,routin
+:C )!*IF,_z1,NE,17,THEN
+:C /PREP7
+:C )!*ENDIF
+:C )/go
+:D Preprocessor (PREP7)
+Men_UVBA_P7_T1
+Men_UVBA_P7_T2
+Men_UVBA_P7_T3
+Men_ElemType
+Men_Real_copy
+Fnc_R_too
+Men_Material
+Fnc_DYNA_Shell
+Men_Section_Defs
+Sep_
+Men_CommonSG
+Men_Modeling
+Sep_
+Men_Meshing
+K_LN(lsdyna)
+Sep_
+Men_CheckCtrl
+Men_NumCtrl
+Men_Archive
+Sep_
+Men_CoupCeqn
+Sep_
+Men_DYNAPREP
+K_LN(lsdyna)
+Sep_
+K_LN(lsdyna)
+Men_MFSET
+K_LN(lsdyna+ROMES)
+Sep_
+K_LN(lsdyna+ROMES)
+Men_ROM_Tool
+K_LN(lsdyna)
+Sep_
+Men_Radiosity
+Sep_
+K_LN(ALPHA)
+Men_QA_Test
+K_LN(lsdyna)
+Men_Loads
+K_LN(lsdyna)
+Sep_
+Men_MultiPhys
+Men_CrePath
+Men_UVBA_P7_B1
+Men_UVBA_P7_B2
+Men_UVBA_P7_B3
+:E END
+:!
+:N Men_Solution
+:S   3062,  1300,  1754
+:T Menu
+:A Solution
+:C )/nopr
+:C )*GET,_z1,common,,cycsym_com,,int,2
+:C )*GET,_z2,common,,MFLDCMD,,int,2279 ! 
+:C )KEYWD,CYCLIC,0
+:C )KEYWD,CYCGEN,0
+:C )KEYWD,mfx,0
+:C )*IF,_z1,gt,1,then
+:C )KEYWD,CYCLIC,1
+:C )*ELSEIF,_modcyc,eq,1,then
+:C )KEYWD,CYCGEN,1
+:C )*ENDIF
+:C )*IF,_z2,ge,2,then
+:C )KEYWD,mfx,1
+:C )*ENDIF
+:C /SOLU
+:C )*get,_z10,active,,keyw,,elecstat
+:C )*get,_z11,active,,keyw,,radsurf
+:C )*get,_z12,active,,keyw,,magnetic
+:C )*get,_z13,active,,keyw,,electric
+:C )*get,_z14,active,,keyw,,cfd
+:C )*get,_z15,active,,keyw,,circ
+:C )*get,_z16,active,,keyw,,edgeflx
+:C )*get,_z17,active,,keyw,,fluid
+:C )*get,_z18,active,,keyw,,thermal
+:C )_z30=_z10+_z11+_z12+_z13+_z14+_z15+_z16+_z17+_z18
+:C )*get,_z19,active,,keyw,,pr_elmag
+:C )*get,_z20,active,,keyw,,pr_multi
+:C )*get,_z21,active,,keyw,,pr_cfd
+:C )_z30=_z30+_z19+_z20+_z21
+:C )keyw,oldmenu,0
+:C )*if,_z30,gt,0,then
+:C )keyw,simploff,1
+:C )keyw,oldmenu,1
+:C )*endif
+:C )!keyword for host selection
+:C )keyw,hscript,0
+:C )*get,_z31,common,,soptcm,,int,119
+:C )*if,_z31,eq,2,then
+:C )keyw,hscript,1
+:C )*endif
+:C )keyw,pertbslv,0
+:C )*get,_z32,common,,restartcm,,int,84
+:C )*if,_z32,ne,0,then
+:C )keyw,pertbslv,1
+:C )*endif
+:C )/go
+:D Solution (SOLU)
+Men_UVBA_Solu_T1
+Men_UVBA_Solu_T2
+Men_UVBA_Solu_T3
+Men_DYNA_Cnstr
+K_LN(LSDYNA)
+Men_DYNA_Veloc
+K_LN(LSDYNA)
+Men_Solu_Load
+Men_Rigid_Deform
+Men_Default_Controls
+K_LN(LSDYNA)
+Sep_
+Men_DYNA_TimeCon
+Men_DYNA_OutCtrl
+K_LN(LSDYNA)
+Sep_
+K_LN(LSDYNA)
+Fnc_DYNA_Input
+K_LN(LSDYNA)
+Fnc_SOLVEDYN
+P_LN(LINPLUS*THERMAL*ELECMAG)
+K_LN(lsdyna)
+Men_Analysis
+K_LN(lsdyna+PARPERF)
+Fnc_HostSelect
+K_LN(lsdyna+((static+modal+buckling+trnsient)*SIMPLOFF))
+P_LN(LINPLUS)
+Sep_
+K_LN(lsdyna+((static+buckling+trnsient)*SIMPLOFF*REDUCED))
+Men_MasterDOF
+K_LN(lsdyna+((static+modal+buckling+trnsient)*SIMPLOFF*REDUCED*MODESUP))
+Men_GapCond
+K_LN(lsdyna+((static+buckling+trnsient)*SIMPLOFF*REDUCED*MODESUP))
+Sep_
+K_LN(lsdyna)
+Men_DefineLoads
+K_LN(lsdyna)
+Sep_
+K_LN(lsdyna)
+Men_LoadStepOpts
+K_LN(lsdyna)
+Sep_
+K_LN(lsdyna+((static+modal+buckling+trnsient)*SIMPLOFF))
+Men_MultiPhys
+K_LN(LSDYNA+((static+modal+buckling+trnsient)*SIMPLOFF))
+Sep_
+Men_SE_Management
+Sep_
+Fnc_NLHIST
+Sep_
+K_LN(mfx)
+Fnc_-Solve-
+K_LN(lsdyna+pertbslv)
+Fnc_SOLVE
+K_LN(lsdyna+PERTBSLV)
+Fnc_SOLVE_PERT
+K_LN(lsdyna+pertbslv+((modal+buckling)*SIMPLOFF))
+Fnc_LSSOLVE
+K_LN(lsdyna+((static+modal+buckling+trnsient)*SIMPLOFF))
+Fnc_ADAPT
+K_LN(lsdyna+(ELECSTAT*(static+trnsient)*SIMPLOFF*REDUCED*MODESUP))
+Men_EMASOLV
+Fnc_CYCOPT
+Sep_
+Men_-REZONE-
+K_LN(lsdyna)
+Men_MFSET_Solu
+K_LN(lsdyna+ROMES)
+Sep_
+K_LN(lsdyna+ROMES)
+Men_ROM_Tool
+K_LN(lsdyna+TFILM)
+Men_Sol_ThinFilm
+K_LN(STRUCTRL+lsdyna)
+Sep_
+Men_Adamsc
+K_LN(lsdyna+SIMPLOFF+(PR_CFD*pr_set))
+Sep_
+Men_Radiosity
+Men_Diagnostics
+Sep_
+K_LN(lsdyna+oldmenu)
+Fnc_FullGui
+K_LN(lsdyna+oldmenu)
+Fnc_ReduceGui
+Men_UVBA_Solu_B1
+Men_UVBA_Solu_B2
+Men_UVBA_Solu_B3
+Men_Hgenization
+Men_DHgenization
+:E End
+:!  
+:N Men_CommonSG
+:S    125,    81,    36
+:T Menu
+:A Common SGs
+:D Common SGs
+Men_C_1DSG
+Men_C_2DSG
+Men_C_3DSG
+:E END
+:!
+:N Men_C_1DSG
+:S    122,    71,    43
+:T Menu
+:A 1D SGs
+:D 1D SGs
+Fnc_C_1D_Fast
+Fnc_C_1D_Adv
+Fnc_C_1D_Inp
+:E END
+:!
+:N Men_C_2DSG
+:S    127,    71,    48
+:T Menu
+:A 2D SGs
+:D 2D SGs
+Men_C_2D_Beam
+Fnc_C_2D_Square
+Fnc_C_2D_Hexag
+:E END
+:!
+:N Men_C_2D_Beam
+:S    127,    86,    33
+:T Menu
+:A Beam Section
+:D Beam Section
+Fnc_C_2D_B_Com
+Fnc_C_2D_B_Plot
+:E END
+:!
+:N Men_C_3DSG
+:S    130,    71,    51
+:T Menu
+:A 3D SGs
+:D 3D SGs
+Fnc_C_3D_Square
+Fnc_C_3D_Sphere
+Fnc_C_3D_Honeyc
+:E END
+:!
+:N Men_Hgenization
+:S    143,    92,    43
+:T Menu
+:A Homogenization
+:D Homogenization
+Fnc_H_Beam
+Fnc_H_PlateShell
+Fnc_H_Solid
+:E END
+:!
+:N Men_DHgenization
+:S    148,    97,    43
+:T Menu
+:A Dehomogenization
+:D Dehomogenization
+Fnc_D_Beam
+Fnc_D_PlateShell
+Fnc_D_Solid
+:E END
+:!
+:X INDEX ADDED BY ANSYS 
+Men_C_1DSG          4499
+Men_C_2DSG          4625
+Men_C_2D_Beam       4756
+Men_C_3DSG          4887
+Men_CommonSG        4370
+Men_DHgenization    5168
+Men_Hgenization     5021
+Men_Preproc          516
+Men_Solution        1302
+MenuRoot              78

@@ -1,0 +1,377 @@
+:F SwiftCompFUNC1.GRN
+:D User Defined Function
+:I     10,    5607,    5882
+:!
+:N Fnc_C_1D_Fast
+:S    475,    86,   382
+:T Command
+:A Fast Generate
+:D Fast Generate
+Inp_NoApply
+Cmd_C_1D_Fast
+ Fld_0
+  Typ_Lab
+  Prm_Input information for fast laminate generate
+ Fld_0
+  Typ_Sep
+ Fld_2
+  Prm_Material # for lamina
+  Typ_Int
+ Fld_3
+  Prm_Layup ([X,X,X,X,...]msn)
+  Typ_Char,80,80
+  Def_'[]'
+ Fld_4
+  Prm_Ply thickness
+  Typ_Real
+ Fld_5
+  Prm_Element type:
+  Typ_Lis_RadioB
+   Lis_2 nodes (Solid Model), 2
+   Lis_5 nodes (Plate/Shell Model), 5
+  Def_5
+:E END
+:!
+:N Fnc_C_1D_Adv
+:S    696,    93,   596
+:T Command
+:A Advanced Generate
+:D Advanced Generate
+Inp_NoApply
+Cmd_C_1D_Adv
+ Fld_0
+  Typ_Lab
+  Prm_Input information for advanced laminate generate:
+ Fld_0
+  Typ_Sep					
+ Fld_0
+  Typ_Lab
+  Prm_Layer #, Thickness, Angle, Material #
+ Fld_2
+  Prm_1
+  Typ_Real3
+ Fld_5
+  Prm_2
+  Typ_Real3
+ Fld_8
+  Prm_3
+  Typ_Real3
+ Fld_11
+  Prm_4
+  Typ_Real3
+ Fld_14
+  Prm_Repetitions m (before symmetry):
+  Typ_int
+  Def_1
+ Fld_15
+  Prm_Symmetry s:
+  Typ_Logo, No, Yes
+  Def_0
+ Fld_16
+  Prm_Repetitions n (after symmetry):
+  Typ_int
+  Def_1
+ Fld_17
+  Prm_Element type:
+  Typ_Lis_RadioB
+   Lis_2 nodes (Solid Model), 2
+   Lis_5 nodes (Plate/Shell Model), 5
+  Def_5
+:E END
+:!
+:N Fnc_C_1D_Inp
+:S    310,    79,   224
+:T Command
+:A Input File
+:D Input File
+Inp_NoApply
+Cmd_C_1D_Inp
+ Fld_0
+  Typ_Lab
+  Prm_Upload input file
+ Fld_0
+  Typ_Sep 
+ Fld_2
+  Typ_File
+ Fld_5
+  Prm_Element type:
+  Typ_Lis_RadioB
+   Lis_2 nodes (Solid Model), 2
+   Lis_5 nodes (Plate/Shell Model), 5
+  Def_5
+:E END
+:!
+:N Fnc_C_2D_B_Com
+:S    199,   111,    81
+:T Cmd
+:C )! Fnc_Beam_Tool
+:A    Common Section
+:K (PR_STRUC*pr_set)
+Inp_P
+! Cust_Cmd_SECDATA
+! Cust_Cmd_SECOFFSET
+! Cust_Cmd_SECTYPE
+Cmd_)/UI,BEAM,1
+:E END
+:! 
+:N Fnc_C_2D_B_Plot
+:S    159,    86,    66
+:T Command
+:A Plot Section
+:D Plot Section
+Inp_NoApply
+Cmd_C_2D_B_Plot
+ Fld_0
+  Typ_Lab
+  Prm_Plot Section? 
+:E END
+:!
+:N Fnc_C_2D_Square
+:S    707,   100,   600
+:T Command
+:A Square Pack
+:D Square Pack Microstructures
+Inp_NoApply
+Cmd_C_2D_Square
+ Fld_0
+  Typ_Lab
+  Prm_Input square pack (2D) microstructures information
+ Fld_0
+  Typ_Sep
+ Fld_2
+  Prm_Volume fraction of fiber
+  Typ_Real
+ Fld_3
+  Prm_Volume fraction of interphase
+  Typ_Real
+ Fld_4
+  Prm_Material # for fiber:
+  Typ_Int
+ Fld_5
+  Prm_Material # for matrix:
+  Typ_Int
+ Fld_6
+  Prm_Material # for interphase:
+  Typ_Int
+ Fld_7
+  Prm_Element type:
+  Typ_Lis_RadioB
+   Lis_Tri 6 node 2, 2
+   Lis_Quad 4 node 182, 182
+   Lis_Quad 8 node 183, 183
+  Def_183
+ Fld_8
+  Prm_Mesh size:
+  Typ_Lis_OptionB
+   Lis_Coarse,0.5
+   Lis_Normal, 1
+   Lis_Fine, 1.5
+  Def_1  
+:E END
+:!
+:N Fnc_C_2D_Hexag
+:S    709,   105,   597
+:T Command
+:A Hexagonal Pack
+:D Hexagonal Pack Microstructures
+Inp_NoApply
+Cmd_C_2D_Hexag
+ Fld_0
+  Typ_Lab
+  Prm_Input hexagonal pack microstructures information
+ Fld_0
+  Typ_Sep
+ Fld_2
+  Prm_Volume fraction of fiber
+  Typ_Real
+ Fld_3
+  Prm_Volume fraction of interface
+  Typ_Real
+ Fld_4
+  Prm_Material # for fiber:
+  Typ_Int
+ Fld_5
+  Prm_Material # for matrix:
+  Typ_Int
+ Fld_6
+  Prm_Material # for interphase:
+  Typ_Int
+ Fld_7
+  Prm_Element type:
+  Typ_Lis_RadioB
+   Lis_Tri 6 node 2, 2
+   Lis_Quad 4 node 182, 182
+   Lis_Quad 8 node 183, 183
+  Def_183
+ Fld_8
+  Prm_Meshing size:
+  Typ_Lis_OptionB
+   Lis_Coarse,0.5
+   Lis_Normal, 1
+   Lis_Fine, 1.5
+  Def_1
+:E END
+:!
+:N Fnc_C_3D_Square
+:S    584,   100,   477
+:T Command
+:A Square Pack
+:D Square Pack Microstructures
+Inp_NoApply
+Cmd_C_3D_Square
+ Fld_0
+  Typ_Lab
+  Prm_Input square pack (3D) microstructures information
+ Fld_0
+  Typ_Sep
+ Fld_2
+  Prm_Volume fraction of fiber
+  Typ_Real
+ Fld_3
+  Prm_Material # for fiber:
+  Typ_Int
+ Fld_4
+  Prm_Material # for matrix:
+  Typ_Int
+ Fld_5
+  Prm_Element type:
+  Typ_Lis_RadioB
+   Lis_Brick 8 node 185, 185
+   Lis_Brick 20 node 186, 186
+   Def_185
+ Fld_6
+  Prm_Mesh size:
+  Typ_Lis_OptionB
+   Lis_Coarse,0.5
+   Lis_Normal, 1
+   Lis_Fine, 1.5
+  Def_1  
+:E END
+:!
+:N Fnc_C_3D_Sphere
+:S    658,   116,   535
+:T Command
+:A Spherical Inclusion
+:D Spherical Inclusion Microstructures
+Inp_NoApply
+Cmd_C_3D_Sphere
+ Fld_0
+  Typ_Lab
+  Prm_Input spherical inclusion microstructures information
+ Fld_0
+  Typ_Sep
+ Fld_2
+  Prm_Volume fraction of sphere
+  Typ_Real
+ Fld_3
+  Prm_Material # for sphere:
+  Typ_Int
+ Fld_4
+  Prm_Material # for matrix:
+  Typ_Int
+ Fld_5
+  Prm_Element type:
+  Typ_Lis_RadioB
+   Lis_Tet 4 node 285, 285
+   Lis_Tet 10 node 187, 187
+   Lis_Brick 8 node 185, 185
+   Lis_Brick 20 node 186, 186
+   Def_185
+ Fld_6
+  Prm_Mesh size:
+  Typ_Lis_OptionB
+   Lis_Coarse,0.5
+   Lis_Normal, 1
+   Lis_Fine, 1.5
+  Def_1
+:E END
+:!
+:N Fnc_C_3D_Honeyc
+:S   1000,    97,   896
+:T Command
+:A Honeycomb
+:D Honeycomb Structure Genome
+Inp_NoApply
+Cmd_C_3D_Honeyc
+ Fld_0
+  Typ_Sep
+ Fld_0
+  Typ_Lab
+  Prm_Input core information
+ Fld_2
+  Prm_Material #:
+  Typ_Int
+  Def_1
+ Fld_3
+  Prm_L1:
+  Typ_Real
+  Def_3.666
+ Fld_4
+  Prm_L2:
+  Typ_Real
+  Def_1.833
+ Fld_5
+  Prm_tc:
+  Typ_Real
+  Def_0.1
+ Fld_6
+  Prm_theta(degree):
+  Typ_Real
+  Def_60
+ Fld_7
+  Prm_hc:
+  Typ_Real
+  Def_10
+ Fld_8
+  Wall type:
+  Typ_Lis_RadioB
+   Lis_Double wall thickness, 1
+   Lis_Single wall thickness, 2
+   Def_1
+ Fld_0
+  Typ_Sep
+ Fld_0
+  Typ_Lab
+  Prm_Input top face sheet information
+ Fld_9
+  Prm_Material #:
+  Typ_Int
+  Def_2
+ Fld_10
+  Prm_Layup
+  Typ_Char,80,80
+  Def_'[45/-45]'  
+ Fld_11
+  Prm_Ply thickness:
+  Typ_Real
+  Def_0.1
+ Fld_0
+  Typ_Sep
+ Fld_0
+  Typ_Lab
+  Prm_Input bottom face sheet information
+ Fld_12
+  Prm_Material #:
+  Typ_Int
+  Def_2 
+ Fld_13
+  Prm_Layup
+  Typ_Char,80,80
+  Def_'[45/-45]'  
+ Fld_14
+  Prm_Ply thickness:
+  Typ_Real
+  Def_0.1
+:E END
+:!
+:X INDEX ADDED BY ANSYS 
+Fnc_C_1D_Adv         556
+Fnc_C_1D_Fast         78
+Fnc_C_1D_Inp        1255
+Fnc_C_2D_B_Com      1568
+Fnc_C_2D_B_Plot     1771
+Fnc_C_2D_Hexag      2644
+Fnc_C_2D_Square     1934
+Fnc_C_3D_Honeyc     4604
+Fnc_C_3D_Sphere     3943
+Fnc_C_3D_Square     3356

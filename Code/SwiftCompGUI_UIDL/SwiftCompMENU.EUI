@@ -1,0 +1,520 @@
+namespace eval ::euidl::uidlmenu::uidlmenuItems {
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(MenuRoot) { top {key 0} {level 0} } {
+   global env
+   set branchLeafs [list]
+   set str [::msgcat::mc "Main Menu"]
+   lappend tags branch
+   lappend tags headlevel__$level
+   set icon {}
+   set branchName [list MenuRoot__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   set nodes "Men_UVBA_Main_T1 Men_UVBA_Main_T2 Men_UVBA_Main_T3 Fnc_Preferences Men_Preproc Men_Solution Men_GenlPost Men_TimePost {Men_DropTest {0 (DROPTEST)}} Men_ROM Men_ProbDesign Men_Aux12 Fnc_UNDO Fnc_FINISH {Men_UtilMenu {0 (UTILMENU)}} Men_UVBA_Main_B1 Men_UVBA_Main_B2 Men_UVBA_Main_B3"
+   foreach node $nodes {
+      set ignore 0
+      if { [llength $node] > 1 } {
+         foreach filterdata [lrange $node 1 end] {
+            set type [lindex $filterdata 0]
+            set filters [lindex $filterdata 1]
+            foreach filt $filters {
+               if { ![ans_getfilter $type [list $filt]] } {
+                  set ignore 1
+                  continue
+               }
+            }
+         }
+      }
+      if {$ignore} { continue }
+      if { ![catch {::euidl::uidlmenu::uidlmenuItems::uidlmenu([lindex $node 0]) MenuRoot [expr $key+1] $level} branch] && [llength $branch]} {
+         if { [string match {} $branch] } {
+            continue
+         }
+         lappend branchLeafs $branch
+      } else {
+         #puts "[info script] error $node = $branch"
+      }
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlexec(Men_Preproc) { args } {
+   ans_sendcommand )/nopr
+   ans_sendcommand )!*get,_z1,active,,routin
+   ans_sendcommand )!*IF,_z1,NE,17,THEN
+   ans_sendcommand /PREP7
+   ans_sendcommand )!*ENDIF
+   ans_sendcommand )/go
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Men_Preproc) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Preprocessor"]
+   lappend tags branch
+   lappend tags headlevel__$level
+   set icon {}
+   set branchName [list Men_Preproc__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   set nodes "Men_UVBA_P7_T1 Men_UVBA_P7_T2 Men_UVBA_P7_T3 Men_ElemType Men_Real_copy Fnc_R_too Men_Material Fnc_DYNA_Shell Men_Section_Defs Men_CommonSG Men_Modeling Men_Meshing Men_CheckCtrl Men_NumCtrl Men_Archive Men_CoupCeqn Men_DYNAPREP {Men_MFSET {0 (lsdyna)}} {Men_ROM_Tool {0 (lsdyna+ROMES)}} Men_Radiosity {Men_QA_Test {0 (ALPHA)}} {Men_Loads {0 (lsdyna)}} Men_MultiPhys Men_CrePath Men_UVBA_P7_B1 Men_UVBA_P7_B2 Men_UVBA_P7_B3"
+   foreach node $nodes {
+      set ignore 0
+      if { [llength $node] > 1 } {
+         foreach filterdata [lrange $node 1 end] {
+            set type [lindex $filterdata 0]
+            set filters [lindex $filterdata 1]
+            foreach filt $filters {
+               if { ![ans_getfilter $type [list $filt]] } {
+                  set ignore 1
+                  continue
+               }
+            }
+         }
+      }
+      if {$ignore} { continue }
+      if { ![catch {::euidl::uidlmenu::uidlmenuItems::uidlmenu([lindex $node 0]) Men_Preproc [expr $key+1] $level} branch] && [llength $branch]} {
+         if { [string match {} $branch] } {
+            continue
+         }
+         lappend branchLeafs $branch
+      } else {
+         #puts "[info script] error $node = $branch"
+      }
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlexec(Men_Solution) { args } {
+   ans_sendcommand )/nopr
+   ans_sendcommand )*GET,_z1,common,,cycsym_com,,int,2
+   ans_sendcommand )*GET,_z2,common,,MFLDCMD,,int,2279 !
+   ans_sendcommand )KEYWD,CYCLIC,0
+   ans_sendcommand )KEYWD,CYCGEN,0
+   ans_sendcommand )KEYWD,mfx,0
+   ans_sendcommand )*IF,_z1,gt,1,then
+   ans_sendcommand )KEYWD,CYCLIC,1
+   ans_sendcommand )*ELSEIF,_modcyc,eq,1,then
+   ans_sendcommand )KEYWD,CYCGEN,1
+   ans_sendcommand )*ENDIF
+   ans_sendcommand )*IF,_z2,ge,2,then
+   ans_sendcommand )KEYWD,mfx,1
+   ans_sendcommand )*ENDIF
+   ans_sendcommand /SOLU
+   ans_sendcommand )*get,_z10,active,,keyw,,elecstat
+   ans_sendcommand )*get,_z11,active,,keyw,,radsurf
+   ans_sendcommand )*get,_z12,active,,keyw,,magnetic
+   ans_sendcommand )*get,_z13,active,,keyw,,electric
+   ans_sendcommand )*get,_z14,active,,keyw,,cfd
+   ans_sendcommand )*get,_z15,active,,keyw,,circ
+   ans_sendcommand )*get,_z16,active,,keyw,,edgeflx
+   ans_sendcommand )*get,_z17,active,,keyw,,fluid
+   ans_sendcommand )*get,_z18,active,,keyw,,thermal
+   ans_sendcommand )_z30=_z10+_z11+_z12+_z13+_z14+_z15+_z16+_z17+_z18
+   ans_sendcommand )*get,_z19,active,,keyw,,pr_elmag
+   ans_sendcommand )*get,_z20,active,,keyw,,pr_multi
+   ans_sendcommand )*get,_z21,active,,keyw,,pr_cfd
+   ans_sendcommand )_z30=_z30+_z19+_z20+_z21
+   ans_sendcommand )keyw,oldmenu,0
+   ans_sendcommand )*if,_z30,gt,0,then
+   ans_sendcommand )keyw,simploff,1
+   ans_sendcommand )keyw,oldmenu,1
+   ans_sendcommand )*endif
+   ans_sendcommand )!keyword for host selection
+   ans_sendcommand )keyw,hscript,0
+   ans_sendcommand )*get,_z31,common,,soptcm,,int,119
+   ans_sendcommand )*if,_z31,eq,2,then
+   ans_sendcommand )keyw,hscript,1
+   ans_sendcommand )*endif
+   ans_sendcommand )keyw,pertbslv,0
+   ans_sendcommand )*get,_z32,common,,restartcm,,int,84
+   ans_sendcommand )*if,_z32,ne,0,then
+   ans_sendcommand )keyw,pertbslv,1
+   ans_sendcommand )*endif
+   ans_sendcommand )/go
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Men_Solution) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Solution"]
+   lappend tags branch
+   lappend tags headlevel__$level
+   set icon {}
+   set branchName [list Men_Solution__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   set nodes "Men_UVBA_Solu_T1 Men_UVBA_Solu_T2 Men_UVBA_Solu_T3 Men_DYNA_Cnstr {Men_DYNA_Veloc {0 (LSDYNA)}} {Men_Solu_Load {0 (LSDYNA)}} Men_Rigid_Deform Men_Default_Controls Men_DYNA_TimeCon Men_DYNA_OutCtrl {Fnc_DYNA_Input {0 (LSDYNA)}} {Fnc_SOLVEDYN {0 (LSDYNA)}} {Men_Analysis {1 (LINPLUS*THERMAL*ELECMAG)} {0 (lsdyna)}} {Fnc_HostSelect {0 (lsdyna+PARPERF)}} {Men_MasterDOF {0 (lsdyna+((static+buckling+trnsient)*SIMPLOFF*REDUCED))}} {Men_GapCond {0 (lsdyna+((static+modal+buckling+trnsient)*SIMPLOFF*REDUCED*MODESUP))}} {Men_DefineLoads {0 (lsdyna)}} {Men_LoadStepOpts {0 (lsdyna)}} {Men_MultiPhys {0 (lsdyna+((static+modal+buckling+trnsient)*SIMPLOFF))}} Men_SE_Management Fnc_NLHIST {Fnc_-Solve- {0 (mfx)}} Men_-REZONE- {Men_MFSET_Solu {0 (lsdyna)}} {Men_ROM_Tool {0 (lsdyna+ROMES)}} {Men_Sol_ThinFilm {0 (lsdyna+TFILM)}} Men_Adamsc Men_Radiosity Men_Diagnostics {Fnc_FullGui {0 (lsdyna+oldmenu)}} {Fnc_ReduceGui {0 (lsdyna+oldmenu)}} Men_UVBA_Solu_B1 Men_UVBA_Solu_B2 Men_UVBA_Solu_B3 Men_Hgenization Men_DHgenization"
+   foreach node $nodes {
+      set ignore 0
+      if { [llength $node] > 1 } {
+         foreach filterdata [lrange $node 1 end] {
+            set type [lindex $filterdata 0]
+            set filters [lindex $filterdata 1]
+            foreach filt $filters {
+               if { ![ans_getfilter $type [list $filt]] } {
+                  set ignore 1
+                  continue
+               }
+            }
+         }
+      }
+      if {$ignore} { continue }
+      if { ![catch {::euidl::uidlmenu::uidlmenuItems::uidlmenu([lindex $node 0]) Men_Solution [expr $key+1] $level} branch] && [llength $branch]} {
+         if { [string match {} $branch] } {
+            continue
+         }
+         lappend branchLeafs $branch
+      } else {
+         #puts "[info script] error $node = $branch"
+      }
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Fnc_-Solve-_HEADMen_Solution) { top {key 0} {level -1} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Fnc_-Solve"]
+   lappend tags branch
+   lappend tags HEAD
+   set icon {}
+   lappend tags headlevel__$level
+   set branchName [list Fnc_-Solve-_HEADMen_Solution__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   set nodes "{Fnc_SOLVE {0 (lsdyna+pertbslv)}} {Fnc_SOLVE_PERT {0 (lsdyna+PERTBSLV)}} {Fnc_LSSOLVE {0 (lsdyna+pertbslv+((modal+buckling)*SIMPLOFF))}} {Fnc_ADAPT {0 (lsdyna+((static+modal+buckling+trnsient)*SIMPLOFF))}} {Men_EMASOLV {0 (lsdyna+(ELECSTAT*(static+trnsient)*SIMPLOFF*REDUCED*MODESUP))}} Fnc_CYCOPT"
+   foreach node $nodes {
+      set ignore 0
+      if { [llength $node] > 1 } {
+         foreach filterdata [lrange $node 1 end] {
+            set type [lindex $filterdata 0]
+            set filters [lindex $filterdata 1]
+            foreach filt $filters {
+               if { ![ans_getfilter $type [list $filt]] } {
+                  set ignore 1
+                  continue
+               }
+            }
+         }
+      }
+      if {$ignore} { continue }
+      if { ![catch {::euidl::uidlmenu::uidlmenuItems::uidlmenu([lindex $node 0]) Fnc_-Solve-_HEADMen_Solution [expr $key+1] $level} branch] && [llength $branch]} {
+         if { [string match {} $branch] } {
+            continue
+         }
+         lappend branchLeafs $branch
+      } else {
+         #puts "[info script] error $node = $branch"
+      }
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Men_CommonSG) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Common SGs"]
+   lappend tags branch
+   lappend tags headlevel__$level
+   set icon {}
+   set branchName [list Men_CommonSG__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   set nodes "Men_C_1DSG Men_C_2DSG Men_C_3DSG"
+   foreach node $nodes {
+      set ignore 0
+      if { [llength $node] > 1 } {
+         foreach filterdata [lrange $node 1 end] {
+            set type [lindex $filterdata 0]
+            set filters [lindex $filterdata 1]
+            foreach filt $filters {
+               if { ![ans_getfilter $type [list $filt]] } {
+                  set ignore 1
+                  continue
+               }
+            }
+         }
+      }
+      if {$ignore} { continue }
+      if { ![catch {::euidl::uidlmenu::uidlmenuItems::uidlmenu([lindex $node 0]) Men_CommonSG [expr $key+1] $level} branch] && [llength $branch]} {
+         if { [string match {} $branch] } {
+            continue
+         }
+         lappend branchLeafs $branch
+      } else {
+         #puts "[info script] error $node = $branch"
+      }
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Men_C_1DSG) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "1D SGs"]
+   lappend tags branch
+   lappend tags headlevel__$level
+   set icon {}
+   set branchName [list Men_C_1DSG__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   set nodes "Fnc_C_1D_Fast Fnc_C_1D_Adv Fnc_C_1D_Inp"
+   foreach node $nodes {
+      set ignore 0
+      if { [llength $node] > 1 } {
+         foreach filterdata [lrange $node 1 end] {
+            set type [lindex $filterdata 0]
+            set filters [lindex $filterdata 1]
+            foreach filt $filters {
+               if { ![ans_getfilter $type [list $filt]] } {
+                  set ignore 1
+                  continue
+               }
+            }
+         }
+      }
+      if {$ignore} { continue }
+      if { ![catch {::euidl::uidlmenu::uidlmenuItems::uidlmenu([lindex $node 0]) Men_C_1DSG [expr $key+1] $level} branch] && [llength $branch]} {
+         if { [string match {} $branch] } {
+            continue
+         }
+         lappend branchLeafs $branch
+      } else {
+         #puts "[info script] error $node = $branch"
+      }
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Men_C_2DSG) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "2D SGs"]
+   lappend tags branch
+   lappend tags headlevel__$level
+   set icon {}
+   set branchName [list Men_C_2DSG__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   set nodes "Men_C_2D_Beam Fnc_C_2D_Square Fnc_C_2D_Hexag"
+   foreach node $nodes {
+      set ignore 0
+      if { [llength $node] > 1 } {
+         foreach filterdata [lrange $node 1 end] {
+            set type [lindex $filterdata 0]
+            set filters [lindex $filterdata 1]
+            foreach filt $filters {
+               if { ![ans_getfilter $type [list $filt]] } {
+                  set ignore 1
+                  continue
+               }
+            }
+         }
+      }
+      if {$ignore} { continue }
+      if { ![catch {::euidl::uidlmenu::uidlmenuItems::uidlmenu([lindex $node 0]) Men_C_2DSG [expr $key+1] $level} branch] && [llength $branch]} {
+         if { [string match {} $branch] } {
+            continue
+         }
+         lappend branchLeafs $branch
+      } else {
+         #puts "[info script] error $node = $branch"
+      }
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Men_C_2D_Beam) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Beam Section"]
+   lappend tags branch
+   lappend tags headlevel__$level
+   set icon {}
+   set branchName [list Men_C_2D_Beam__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   set nodes "Fnc_C_2D_B_Com Fnc_C_2D_B_Plot"
+   foreach node $nodes {
+      set ignore 0
+      if { [llength $node] > 1 } {
+         foreach filterdata [lrange $node 1 end] {
+            set type [lindex $filterdata 0]
+            set filters [lindex $filterdata 1]
+            foreach filt $filters {
+               if { ![ans_getfilter $type [list $filt]] } {
+                  set ignore 1
+                  continue
+               }
+            }
+         }
+      }
+      if {$ignore} { continue }
+      if { ![catch {::euidl::uidlmenu::uidlmenuItems::uidlmenu([lindex $node 0]) Men_C_2D_Beam [expr $key+1] $level} branch] && [llength $branch]} {
+         if { [string match {} $branch] } {
+            continue
+         }
+         lappend branchLeafs $branch
+      } else {
+         #puts "[info script] error $node = $branch"
+      }
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Men_C_3DSG) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "3D SGs"]
+   lappend tags branch
+   lappend tags headlevel__$level
+   set icon {}
+   set branchName [list Men_C_3DSG__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   set nodes "Fnc_C_3D_Square Fnc_C_3D_Sphere Fnc_C_3D_Honeyc"
+   foreach node $nodes {
+      set ignore 0
+      if { [llength $node] > 1 } {
+         foreach filterdata [lrange $node 1 end] {
+            set type [lindex $filterdata 0]
+            set filters [lindex $filterdata 1]
+            foreach filt $filters {
+               if { ![ans_getfilter $type [list $filt]] } {
+                  set ignore 1
+                  continue
+               }
+            }
+         }
+      }
+      if {$ignore} { continue }
+      if { ![catch {::euidl::uidlmenu::uidlmenuItems::uidlmenu([lindex $node 0]) Men_C_3DSG [expr $key+1] $level} branch] && [llength $branch]} {
+         if { [string match {} $branch] } {
+            continue
+         }
+         lappend branchLeafs $branch
+      } else {
+         #puts "[info script] error $node = $branch"
+      }
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Men_Hgenization) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Homogenization"]
+   lappend tags branch
+   lappend tags headlevel__$level
+   set icon {}
+   set branchName [list Men_Hgenization__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   set nodes "Fnc_H_Beam Fnc_H_PlateShell Fnc_H_Solid"
+   foreach node $nodes {
+      set ignore 0
+      if { [llength $node] > 1 } {
+         foreach filterdata [lrange $node 1 end] {
+            set type [lindex $filterdata 0]
+            set filters [lindex $filterdata 1]
+            foreach filt $filters {
+               if { ![ans_getfilter $type [list $filt]] } {
+                  set ignore 1
+                  continue
+               }
+            }
+         }
+      }
+      if {$ignore} { continue }
+      if { ![catch {::euidl::uidlmenu::uidlmenuItems::uidlmenu([lindex $node 0]) Men_Hgenization [expr $key+1] $level} branch] && [llength $branch]} {
+         if { [string match {} $branch] } {
+            continue
+         }
+         lappend branchLeafs $branch
+      } else {
+         #puts "[info script] error $node = $branch"
+      }
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
+proc ::euidl::uidlmenu::uidlmenuItems::uidlmenu(Men_DHgenization) { top {key 0} {level 0} } {
+   global env
+   incr level
+   set branchLeafs [list]
+   set str [::msgcat::mc "Dehomogenization"]
+   lappend tags branch
+   lappend tags headlevel__$level
+   set icon {}
+   set branchName [list Men_DHgenization__$top "$str" $tags $icon]
+   if { $key == 1 } {
+      return $branchName
+   }
+   set nodes "Fnc_D_Beam Fnc_D_PlateShell Fnc_D_Solid"
+   foreach node $nodes {
+      set ignore 0
+      if { [llength $node] > 1 } {
+         foreach filterdata [lrange $node 1 end] {
+            set type [lindex $filterdata 0]
+            set filters [lindex $filterdata 1]
+            foreach filt $filters {
+               if { ![ans_getfilter $type [list $filt]] } {
+                  set ignore 1
+                  continue
+               }
+            }
+         }
+      }
+      if {$ignore} { continue }
+      if { ![catch {::euidl::uidlmenu::uidlmenuItems::uidlmenu([lindex $node 0]) Men_DHgenization [expr $key+1] $level} branch] && [llength $branch]} {
+         if { [string match {} $branch] } {
+            continue
+         }
+         lappend branchLeafs $branch
+      } else {
+         #puts "[info script] error $node = $branch"
+      }
+   }
+   if { [string match {} $branchLeafs] } {
+      return -code error
+   }
+   return $branchLeafs
+}
